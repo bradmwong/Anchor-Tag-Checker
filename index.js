@@ -2,6 +2,7 @@ const PORT = 8000;
 const axios = require("axios");
 const cheerio = require("cheerio");
 const express = require("express");
+const ejsMate = require('ejs-mate');
 const bodyParser = require("body-parser");
 const app = express();
 const cors = require('cors');
@@ -11,8 +12,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', function (req, res) {
-    res.json('This is the default page');
+app.engine('ejs', ejsMate);
+app.set('view engine', 'ejs');
+
+app.get('/', async function (req, res) {
+    const urlLink = "https://librarytrustees.ab.ca/wp-sitemap-posts-post-1.xml";
+    const links = await fetchLinks(urlLink);
+    console.log(links);
+    res.render("home", { links });
 })
 
 app.get('/test', function (req, res) {
@@ -23,9 +30,8 @@ app.get('/results', (req, res) => {
 
 })
 
-const fetchLinks = async () => {
+const fetchLinks = async (urlLink) => {
     try {
-        const urlLink = "https://librarytrustees.ab.ca/wp-sitemap-posts-post-1.xml";
         // const urlLink = await axios.get('https://developers.google.com/maps/sitemap.xml');
         const response = await axios.get(urlLink);
         const headResponse = await axios.head(urlLink);
@@ -51,10 +57,5 @@ const fetchLinks = async () => {
         return [];
     }
 };
-
-console.log("start");
-fetchLinks().then((links) => console.log(links));
-
-
 
 app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
