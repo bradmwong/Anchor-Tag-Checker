@@ -17,17 +17,17 @@ const { fetchLinks } = require('./models/fetchSiteMapLinks');
 
 app.get('/', (req, res) => {
 
-    // // Initialize Variables
+    // Initialize Variables
     const siteMapUrl = "";
     const links = [];
-
+    
     res.render("home", { siteMapUrl, links });
 });
 
-app.post('/update', async (req, res) => {
+app.post('/', async (req, res) => {
 
     const siteMapUrl = req.body.siteMapUrl;
-    const links = await fetchLinks(siteMapUrl);
+    const links = await fetchLinks(siteMapUrl) || [];
     
     res.render("home", { siteMapUrl, links });
 });

@@ -1,6 +1,6 @@
 <h1>HOME PAGE</h1>
 
-<form id="form" action="/update" method="POST">
+<form id="form" action="/" method="POST">
     <input type="text" id="siteMapUrl" name="siteMapUrl" required>
     <input type="submit" value="Submit">
 </form>
@@ -9,6 +9,10 @@
     <h1>Links for SiteMap URL: <%= siteMapUrl %></h1>
 <% }; %>
 
-<% links.forEach(function(link) { %>
-    <li><%= link %></li>
-<% }); %>
+<% if (links.length) { %>
+    <% links.forEach(function(link) { %>
+        <li><%= link %></li>
+    <% }); %>
+<% } else { %>
+    <li>Unable to find any SiteMap Links</li>
+<% }; %>

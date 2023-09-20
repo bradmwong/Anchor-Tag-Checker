@@ -5,7 +5,7 @@ module.exports.fetchLinks = async (urlLink) => {
     try {
         const response = await axios.get(urlLink);
         const contentType = response.headers["content-type"];
-        const links = [];
+        let links = [];
 
         console.log(contentType)
 
@@ -16,10 +16,22 @@ module.exports.fetchLinks = async (urlLink) => {
             const $ = cheerio.load(xmlData, {
                 xmlMode: true, // Parse as XML
             });
+
+
             $("loc").each((index, el) => {
-                const url = $(el).text();
+
+                let url = $(el).text();
+                // Remove query params
+                const parsedURL = new URL(url);
+                parsedURL.search = '';
+                url = parsedURL.toString();
+                // Push to array
                 links.push(url);
+
             });
+            
+            // Remove duplicate URL links
+            links = [...new Set(links)];
             return links;
         }
 
@@ -28,3 +40,14 @@ module.exports.fetchLinks = async (urlLink) => {
         return [];
     }
 };
+
+function removeQueryParameters(url) {
+    // Use the URL constructor to parse the URL
+    const parsedURL = new URL(url);
+  
+    // Remove query parameters
+    parsedURL.search = '';
+  
+    // Return the modified URL
+    return parsedURL.toString();
+  }
