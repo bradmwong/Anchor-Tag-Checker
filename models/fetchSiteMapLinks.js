@@ -4,10 +4,11 @@ const cheerio = require("cheerio");
 module.exports.fetchLinks = async (urlLink) => {
     try {
         const response = await axios.get(urlLink);
-        const headResponse = await axios.head(urlLink);
-        const contentType = headResponse.headers["content-type"];
+        const contentType = response.headers["content-type"];
         const links = [];
-        
+
+        console.log(contentType)
+
         if (contentType.includes("application/xml") || contentType.includes("text/xml")) {
             
             // If XML -> Parse as XML
