@@ -19,15 +19,15 @@ app.get('/', (req, res) => {
 
     // Initialize Variables
     const siteMapUrl = "";
-    const links = [];
-    
+    const links = {};
+
     res.render("home", { siteMapUrl, links });
 });
 
 app.post('/', async (req, res) => {
 
     const siteMapUrl = req.body.siteMapUrl;
-    const links = await fetchLinks(siteMapUrl) || [];
+    const links = await fetchLinks(siteMapUrl) || {};
     
     res.render("home", { siteMapUrl, links });
 });

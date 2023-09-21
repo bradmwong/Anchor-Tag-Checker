@@ -1,3 +1,6 @@
+<% layout('layouts/homeTemplate') %>
+
+
 <h1>HOME PAGE</h1>
 
 <form id="form" action="/" method="POST">
@@ -5,14 +8,7 @@
     <input type="submit" value="Submit">
 </form>
 
+
 <% if (siteMapUrl) { %>
     <h1>Links for SiteMap URL: <%= siteMapUrl %></h1>
-<% }; %>
-
-<% if (links.length) { %>
-    <% links.forEach(function(link) { %>
-        <li><%= link %></li>
-    <% }); %>
-<% } else { %>
-    <li>Unable to find any SiteMap Links</li>
 <% }; %>
