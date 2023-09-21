@@ -1,9 +1,21 @@
 
 
 <% if (Object.keys(linksDict).length > 0) { %>
-    <% for (const key in linksDict) { %>
-        <li><%= key %></li>
-    <% }; %>
+    <table>
+        <tr>
+            <th>Weblink</th>
+            <th>Errors</th>
+        </tr>
+        <% for (const key in linksDict) { %>
+            <tr>
+                <th><%= key %></th>
+                <th><%= linksDict[key] %></th>
+            </tr>
+        <% }; %>
+    </table>
+
 <% } else { %>
     <li>Unable to find any SiteMap Links</li>
 <% }; %>
+
+

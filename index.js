@@ -30,7 +30,7 @@ app.post('/', async (req, res) => {
     const siteMapUrl = req.body.siteMapUrl;
     let linksDict = await fetchLinks(siteMapUrl) || {};
 
-    linksDict = assignErrors(linksDict, 1, 30);
+    linksDict = assignErrors(linksDict, 1, 5);
     console.log(linksDict);
     
     res.render("home", { siteMapUrl, linksDict });
