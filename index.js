@@ -28,16 +28,32 @@ app.get('/', (req, res) => {
 app.post('/', async (req, res) => {
 
     const siteMapUrl = req.body.siteMapUrl;
-    let linksDict = await fetchLinks(siteMapUrl) || {};
+    let linksDict = req.body.linksDict || await fetchLinks(siteMapUrl) || {};
 
-    linksDict = assignErrors(linksDict, 1, 5);
+
+    let page = req.body.page || 1;
+    let quantity = 5;
+
+    linksDict = assignErrors(linksDict, page, quantity);
     console.log(linksDict);
     
-    res.render("home", { siteMapUrl, linksDict });
+    res.render("home", { siteMapUrl, linksDict, page, quantity });
 });
 
 
+app.post('/nextPage', async (req, res) => {
 
+    const updatedText = 'NEXT BUTTON PRESSED';
+    res.send(updatedText);
+
+});
+
+app.post('/previousPage', async (req, res) => {
+
+    const updatedText = 'PREVIOUS BUTTON PRESSED';
+    res.send(updatedText);
+
+});
 
 
 app.get('/test', function (req, res) {

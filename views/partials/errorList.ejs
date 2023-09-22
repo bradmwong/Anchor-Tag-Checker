@@ -1,21 +1,148 @@
-
-
-<% if (Object.keys(linksDict).length > 0) { %>
-    <table>
-        <tr>
-            <th>Weblink</th>
-            <th>Errors</th>
-        </tr>
-        <% for (const key in linksDict) { %>
+<% if (typeof linksDict !== "undefined") { %>
+    <% if (Object.keys(linksDict).length > 0) { %>
+        <table id="linkTable">
             <tr>
-                <th><%= key %></th>
-                <th><%= linksDict[key] %></th>
+                <th>Weblink</th>
+                <th>Errors</th>
             </tr>
-        <% }; %>
-    </table>
+            
+            <% let startingIndex = page * quantity - quantity;
+            let endingIndex = page * quantity - 1;
+            let keys = Object.keys(linksDict);
+            for (i = 0; i <= Object.keys(linksDict).length; i++) {
+                let key = keys[i];
+                if (linksDict.hasOwnProperty(key)) {
+                    if (linksDict[key] !== []) {
+                        if (i <= endingIndex) { %>
+                            <tr class="row visible">
+                        <% } else { %>
+                            <tr class="row hidden">
+                        <% } %>
+                            <th><%= key %></th>
+                            <th><%= linksDict[key] %></th>
+                        </tr>
+                    <% }
+                }
+            } %>
+        </table>
 
+
+        <br>
+        <span>
+            <button id="previousButton">PREVIOUS</button>
+            <span id="pageNumber"><%= page %></span>
+            <button id="nextButton">NEXT</button>
+        </span>
+
+        <h3 id="serverResponse">Server Response</h3>
+
+
+        <script>
+            
+            const nextButton = document.querySelector('#nextButton');
+            const previousButton = document.querySelector('#previousButton');
+            const pageField = document.querySelector('#pageNumber');
+
+            const firstPage = 1;
+            const rows = document.querySelectorAll('.row');
+            const pageQuantity = <%= quantity %>;
+            const lastPage = (rows.length % pageQuantity !== 0) ? (Math.floor(rows.length / pageQuantity) + 1) : (rows.length / pageQuantity);
+
+            // NEXT BUTTON
+            nextButton.addEventListener('click', async function () {
+
+                let pageNumber = parseInt(pageField.innerText, 10);
+                if (pageNumber < lastPage) {               
+
+                    let startIndex = pageNumber * pageQuantity - pageQuantity;
+                    let endIndex = pageNumber * pageQuantity - 1;
+                    for (let i = startIndex; i <= endIndex; i++) {
+                        if (typeof rows[i] !== "undefined") {
+                            rows[i].classList.remove('visible');
+                            rows[i].classList.add('hidden');
+                        }
+                    }
+
+                    pageNumber++;
+                    pageField.innerText = pageNumber;
+                    startIndex = pageNumber * pageQuantity - pageQuantity;
+                    endIndex = pageNumber * pageQuantity - 1;
+                    for (let i = startIndex; i <= endIndex; i++) {
+                        if (typeof rows[i] !== "undefined") {
+                            rows[i].classList.remove('hidden');
+                            rows[i].classList.add('visible');
+                        }
+                    }
+
+                    try {
+                        const response = await fetch('/nextPage', {
+                            method: 'POST',
+                        });
+
+                        if (response.ok) {
+                            const updatedText = await response.text();
+                            const updateMeElement = document.getElementById('serverResponse');
+                            updateMeElement.innerText = updatedText;
+                        } else {
+                            console.error('Failed to update element');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+            })
+            
+            // PREVIOUS BUTTON
+            previousButton.addEventListener('click', async function () {
+
+                let pageNumber = parseInt(pageField.innerText, 10);
+                if (pageNumber > 1) {               
+
+                    let startIndex = pageNumber * pageQuantity - pageQuantity;
+                    let endIndex = pageNumber * pageQuantity - 1;
+                    for (let i = startIndex; i <= endIndex; i++) {
+                        if (typeof rows[i] !== "undefined") {
+                            rows[i].classList.remove('visible');
+                            rows[i].classList.add('hidden');
+                        }
+                    }
+
+                    pageNumber--;
+                    pageField.innerText = pageNumber;
+                    startIndex = pageNumber * pageQuantity - pageQuantity;
+                    endIndex = pageNumber * pageQuantity - 1;
+                    for (let i = startIndex; i <= endIndex; i++) {
+                        if (typeof rows[i] !== "undefined") {
+                            rows[i].classList.remove('hidden');
+                            rows[i].classList.add('visible');
+                        }
+                    }
+
+                    try {
+                        const response = await fetch('/previousPage', {
+                            method: 'POST',
+                        });
+
+                        if (response.ok) {
+                            const updatedText = await response.text();
+                            const updateMeElement = document.getElementById('serverResponse');
+                            updateMeElement.innerText = updatedText;
+                        } else {
+                            console.error('Failed to update element');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                }
+            })
+
+        </script>
+
+
+
+    <% } else { %>
+        <li>Unable to find any SiteMap Links</li>
+    <% }; %>
 <% } else { %>
-    <li>Unable to find any SiteMap Links</li>
+    <li>linksList is undefined</li>
 <% }; %>
-
-
