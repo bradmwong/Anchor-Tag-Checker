@@ -18,8 +18,8 @@
                         <% } else { %>
                             <tr class="row hidden">
                         <% } %>
-                            <th><%= key %></th>
-                            <th><%= linksDict[key] %></th>
+                            <th class="row-url"><%= key %></th>
+                            <th class="row-errors"><%= linksDict[key] %></th>
                         </tr>
                     <% }
                 }
@@ -52,6 +52,7 @@
             nextButton.addEventListener('click', async function () {
 
                 let pageNumber = parseInt(pageField.innerText, 10);
+                let incompleteURLs = [];
                 if (pageNumber < lastPage) {               
 
                     let startIndex = pageNumber * pageQuantity - pageQuantity;
@@ -69,14 +70,25 @@
                     endIndex = pageNumber * pageQuantity - 1;
                     for (let i = startIndex; i <= endIndex; i++) {
                         if (typeof rows[i] !== "undefined") {
+                            const rowURL = rows[i].querySelector('.row-url').innerText;
+                            const rowErrors = rows[i].querySelector('.row-errors').innerText;
+                            if (rowErrors === "") {
+                                incompleteURLs.push(rowURL);
+                            }
                             rows[i].classList.remove('hidden');
                             rows[i].classList.add('visible');
                         }
-                    }
+                    }                   
 
                     try {
+
+                        const dataToSend = {
+                            incompleteURLs: incompleteURLs,
+                        };
                         const response = await fetch('/nextPage', {
                             method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(dataToSend)
                         });
 
                         if (response.ok) {
@@ -96,6 +108,7 @@
             previousButton.addEventListener('click', async function () {
 
                 let pageNumber = parseInt(pageField.innerText, 10);
+                let incompleteURLs = [];
                 if (pageNumber > 1) {               
 
                     let startIndex = pageNumber * pageQuantity - pageQuantity;
@@ -113,14 +126,25 @@
                     endIndex = pageNumber * pageQuantity - 1;
                     for (let i = startIndex; i <= endIndex; i++) {
                         if (typeof rows[i] !== "undefined") {
+                            const rowURL = rows[i].querySelector('.row-url').innerText;
+                            const rowErrors = rows[i].querySelector('.row-errors').innerText;
+                            if (rowErrors === "") {
+                                incompleteURLs.push(rowURL);
+                            }
                             rows[i].classList.remove('hidden');
                             rows[i].classList.add('visible');
                         }
                     }
 
                     try {
+
+                        const dataToSend = {
+                            incompleteURLs: incompleteURLs,
+                        };
                         const response = await fetch('/previousPage', {
                             method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(dataToSend)
                         });
 
                         if (response.ok) {

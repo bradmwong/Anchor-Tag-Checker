@@ -43,14 +43,14 @@ app.post('/', async (req, res) => {
 
 app.post('/nextPage', async (req, res) => {
 
-    const updatedText = 'NEXT BUTTON PRESSED';
+    const updatedText = `NEXT BUTTON PRESSED ${req.body.incompleteURLs}`;
     res.send(updatedText);
 
 });
 
 app.post('/previousPage', async (req, res) => {
 
-    const updatedText = 'PREVIOUS BUTTON PRESSED';
+    const updatedText = `PREVIOUS BUTTON PRESSED ${req.body.incompleteURLs}`;
     res.send(updatedText);
 
 });
