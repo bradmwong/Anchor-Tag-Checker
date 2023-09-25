@@ -78,29 +78,44 @@
                             rows[i].classList.remove('hidden');
                             rows[i].classList.add('visible');
                         }
-                    }                   
-
-                    try {
-
-                        const dataToSend = {
-                            incompleteURLs: incompleteURLs,
-                        };
-                        const response = await fetch('/nextPage', {
-                            method: 'POST',
-                            headers: {'Content-Type': 'application/json'},
-                            body: JSON.stringify(dataToSend)
-                        });
-
-                        if (response.ok) {
-                            const updatedText = await response.text();
-                            const updateMeElement = document.getElementById('serverResponse');
-                            updateMeElement.innerText = updatedText;
-                        } else {
-                            console.error('Failed to update element');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
                     }
+
+                    if (incompleteURLs.length) {
+
+                        try {
+
+                            const dataToSend = {
+                                incompleteURLs: incompleteURLs,
+                            };
+                            const response = await fetch('/nextPage', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify(dataToSend)
+                            });
+
+                            if (response.ok) {
+
+                                const rowErrors = document.querySelectorAll('.row-errors');
+                                const responseText = await response.text();
+                                const linksObject = JSON.parse(responseText);
+                                
+                                Object.entries(linksObject).forEach(([key, value]) => {
+                                    const index = findIndexRowOfURL(key);
+                                    if(findIndexRowOfURL(key) >= 0) {
+                                        rowErrors[index].innerText = value;
+                                        console.log(`updated: ${index}`)
+                                    }
+                                });
+
+                            } else {
+                                console.error('Failed to update element');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                        }
+
+                    }
+
                 }
             })
             
@@ -159,6 +174,20 @@
                     }
                 }
             })
+
+            
+            function findIndexRowOfURL (urlString) {
+                const rowURLs = document.querySelectorAll('.row-url');
+                let index = -1;     // Return -1 if not found
+                for (let i = 0; i < rowURLs.length; i++) {
+                    let rowURL = rowURLs[i].innerText.trim();
+                    if (urlString.trim() === rowURL) {
+                        index = i;
+                        break;
+                    }
+                }
+                return index;
+            }
 
         </script>
 
