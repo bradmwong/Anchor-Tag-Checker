@@ -34,151 +34,148 @@
             <button id="nextButton">NEXT</button>
         </span>
 
-        <h3 id="serverResponse">Server Response</h3>
-
 
         <script>
-            
-            const nextButton = document.querySelector('#nextButton');
-            const previousButton = document.querySelector('#previousButton');
-            const pageField = document.querySelector('#pageNumber');
-
-            const firstPage = 1;
-            const rows = document.querySelectorAll('.row');
-            const pageQuantity = <%= quantity %>;
-            const lastPage = (rows.length % pageQuantity !== 0) ? (Math.floor(rows.length / pageQuantity) + 1) : (rows.length / pageQuantity);
 
             // NEXT BUTTON
-            nextButton.addEventListener('click', async function () {
+            nextButton.addEventListener('click', function() {
+                pageSelector('next');
+            });
 
-                let pageNumber = parseInt(pageField.innerText, 10);
+            // PREVIOUS BUTTON
+            previousButton.addEventListener('click', function () {
+                pageSelector('previous');
+            })
+
+            async function pageSelector(pageSelection) {
+
+                const nextButton = document.querySelector('#nextButton');
+                const previousButton = document.querySelector('#previousButton');
+                const pageField = document.querySelector('#pageNumber');
+                const rows = document.querySelectorAll('.row');
+
+                const pageQuantity = <%= quantity %>;
+                const firstPage = 1;
+                const lastPage = (rows.length % pageQuantity !== 0) ? (Math.floor(rows.length / pageQuantity) + 1) : (rows.length / pageQuantity);
+                const pageNumber = parseInt(pageField.innerText, 10);
+
+                // Check if first page
+                if (pageSelection === 'next') {
+                    if (pageNumber === lastPage) {
+                        return;
+                    }
+                } else if (pageSelection === 'previous') {
+                    if (pageNumber === firstPage) {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+
                 let incompleteURLs = [];
-                if (pageNumber < lastPage) {               
+                let startIndex = 0;
+                let endIndex = 0;
 
-                    let startIndex = pageNumber * pageQuantity - pageQuantity;
-                    let endIndex = pageNumber * pageQuantity - 1;
-                    for (let i = startIndex; i <= endIndex; i++) {
-                        if (typeof rows[i] !== "undefined") {
-                            rows[i].classList.remove('visible');
-                            rows[i].classList.add('hidden');
-                        }
+                // Hide current page
+                startIndex = pageNumber * pageQuantity - pageQuantity;
+                endIndex = pageNumber * pageQuantity - 1;
+                for (let i = startIndex; i <= endIndex; i++) {
+                    if (typeof rows[i] !== "undefined") {
+                        rows[i].classList.remove('visible');
+                        rows[i].classList.add('hidden');
                     }
+                }
 
-                    pageNumber++;
-                    pageField.innerText = pageNumber;
-                    startIndex = pageNumber * pageQuantity - pageQuantity;
-                    endIndex = pageNumber * pageQuantity - 1;
-                    for (let i = startIndex; i <= endIndex; i++) {
-                        if (typeof rows[i] !== "undefined") {
-                            const rowURL = rows[i].querySelector('.row-url').innerText;
-                            const rowErrors = rows[i].querySelector('.row-errors').innerText;
-                            if (rowErrors === "") {
-                                incompleteURLs.push(rowURL);
-                            }
-                            rows[i].classList.remove('hidden');
-                            rows[i].classList.add('visible');
-                        }
-                    }
+                // Reveal and populate next page
+                if (pageSelection === 'next') {
 
-                    if (incompleteURLs.length) {
+                    const nextPageNumber =  pageNumber + 1;
+                    pageField.innerText = nextPageNumber;
+                    startIndex = nextPageNumber * pageQuantity - pageQuantity;
+                    endIndex = nextPageNumber * pageQuantity - 1;
 
-                        try {
+                } else if (pageSelection === 'previous') {
 
-                            const dataToSend = {
-                                incompleteURLs: incompleteURLs,
-                            };
-                            const response = await fetch('/nextPage', {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify(dataToSend)
-                            });
-
-                            if (response.ok) {
-
-                                const rowErrors = document.querySelectorAll('.row-errors');
-                                const responseText = await response.text();
-                                const linksObject = JSON.parse(responseText);
-                                
-                                Object.entries(linksObject).forEach(([key, value]) => {
-                                    const index = findIndexRowOfURL(key);
-                                    if(findIndexRowOfURL(key) >= 0) {
-                                        rowErrors[index].innerText = value;
-                                        console.log(`updated: ${index}`)
-                                    }
-                                });
-
-                            } else {
-                                console.error('Failed to update element');
-                            }
-                        } catch (error) {
-                            console.error('Error:', error);
-                        }
-
-                    }
+                    const previousPageNumber = pageNumber - 1;
+                    pageField.innerText = previousPageNumber;
+                    startIndex = previousPageNumber * pageQuantity - pageQuantity;
+                    endIndex = previousPageNumber * pageQuantity - 1;
 
                 }
-            })
+                for (let i = startIndex; i <= endIndex; i++) {
+                    if (typeof rows[i] !== "undefined") {
+                        const rowURL = rows[i].querySelector('.row-url').innerText;
+                        const rowErrors = rows[i].querySelector('.row-errors').innerText;
+                        if (rowErrors === "" || rowErrors.includes('ERROR:')) {
+                            incompleteURLs.push(rowURL);
+                        }
+                        rows[i].classList.remove('hidden');
+                        rows[i].classList.add('visible');
+                    }
+                }
+
+                await sendPostRequestToUpdateErrorsColumn(incompleteURLs);
+                
+            }
             
-            // PREVIOUS BUTTON
-            previousButton.addEventListener('click', async function () {
 
-                let pageNumber = parseInt(pageField.innerText, 10);
-                let incompleteURLs = [];
-                if (pageNumber > 1) {               
-
-                    let startIndex = pageNumber * pageQuantity - pageQuantity;
-                    let endIndex = pageNumber * pageQuantity - 1;
-                    for (let i = startIndex; i <= endIndex; i++) {
-                        if (typeof rows[i] !== "undefined") {
-                            rows[i].classList.remove('visible');
-                            rows[i].classList.add('hidden');
-                        }
-                    }
-
-                    pageNumber--;
-                    pageField.innerText = pageNumber;
-                    startIndex = pageNumber * pageQuantity - pageQuantity;
-                    endIndex = pageNumber * pageQuantity - 1;
-                    for (let i = startIndex; i <= endIndex; i++) {
-                        if (typeof rows[i] !== "undefined") {
-                            const rowURL = rows[i].querySelector('.row-url').innerText;
-                            const rowErrors = rows[i].querySelector('.row-errors').innerText;
-                            if (rowErrors === "") {
-                                incompleteURLs.push(rowURL);
-                            }
-                            rows[i].classList.remove('hidden');
-                            rows[i].classList.add('visible');
-                        }
-                    }
-
+            // Check for errors to update the 'Errors' column
+            async function sendPostRequestToUpdateErrorsColumn(incompleteURLs) {
+                
+                // Check if there are URLs to check
+                if (incompleteURLs.length) {
                     try {
 
                         const dataToSend = {
                             incompleteURLs: incompleteURLs,
                         };
-                        const response = await fetch('/previousPage', {
+                        const response = await fetch('/nextPage', {
                             method: 'POST',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify(dataToSend)
                         });
+                        const rowErrors = document.querySelectorAll('.row-errors');
 
+                        // Check if response received
                         if (response.ok) {
-                            const updatedText = await response.text();
-                            const updateMeElement = document.getElementById('serverResponse');
-                            updateMeElement.innerText = updatedText;
+                            
+                            const responseText = await response.text();
+                            const linksObject = JSON.parse(responseText);
+                            
+                            // Fill in 'Errors' column 
+                            Object.entries(linksObject).forEach(([key, value]) => {
+                                const index = findIndexRowOfURL(key);
+                                if(findIndexRowOfURL(key) >= 0) {
+                                    rowErrors[index].innerText = value;
+                                    console.log(`updated: ${index}`)
+                                }
+                            });
+                        
                         } else {
-                            console.error('Failed to update element');
+                            
+                            // Fill in 'Errors' column 
+                            for (let i = 0; i < incompleteURLs.length; i++) {
+                                const index = findIndexRowOfURL(incompleteURLs[i]);
+                                rowErrors[index].innerText = `ERROR: Response Status ${response.status}`;
+                            }
+
                         }
+
                     } catch (error) {
                         console.error('Error:', error);
                     }
                 }
-            })
-
+            }
             
+            // Returns the index row that contains the URL string
             function findIndexRowOfURL (urlString) {
+
                 const rowURLs = document.querySelectorAll('.row-url');
-                let index = -1;     // Return -1 if not found
+                
+                // Return -1 if not found
+                let index = -1;
+                
+                // Check if URL string can be found
                 for (let i = 0; i < rowURLs.length; i++) {
                     let rowURL = rowURLs[i].innerText.trim();
                     if (urlString.trim() === rowURL) {
@@ -186,12 +183,12 @@
                         break;
                     }
                 }
+
                 return index;
+
             }
 
         </script>
-
-
 
     <% } else { %>
         <li>Unable to find any SiteMap Links</li>
