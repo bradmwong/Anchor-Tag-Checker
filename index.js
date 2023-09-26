@@ -14,7 +14,7 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 
 const { fetchLinks } = require("./models/fetchSiteMapLinks");
-const { fetchAnchorElementsWithoutIDs } = require("./models/fetchAnchorElementsWithoutIDs")
+const { fetchAnchorElementsWithoutIDs } = require("./models/fetchAnchorElementsWithoutIDs");
 const { assignErrors } = require("./models/assignErrors");
 
 
@@ -33,9 +33,10 @@ app.post("/", async (req, res) => {
     let page = req.body.page || 1;
     let quantity = 5;
 
-    linksDict = assignErrors(linksDict, page, quantity);
+    linksDict = await assignErrors(linksDict, page, quantity);
     // console.log(linksDict);
-    console.log(await fetchAnchorElementsWithoutIDs("https://bradmwong.github.io/test/broken%20anchor%20directs/"))
+    // console.log(await fetchAnchorElementsWithoutIDs("https://bradmwong.github.io/test/broken%20anchor%20directs/"))
+    console.log(await fetchAnchorElementsWithoutIDs("https://developers.google.com/maps/documentation/javascript/reference/3.53/places-autocomplete-service/"))
 
     res.render("home", { siteMapUrl, linksDict, page, quantity });
 });
@@ -43,9 +44,8 @@ app.post("/", async (req, res) => {
 app.post("/changePage", async (req, res) => {
     const incompleteURLs = req.body.incompleteURLs;
     let completedURLsDict = {};
-    console.log(incompleteURLs);
     for (let i = 0; i < incompleteURLs.length; i++) {
-        completedURLsDict[incompleteURLs[i]] = ["a", "b", "c", i];
+        completedURLsDict[incompleteURLs[i]] = await fetchAnchorElementsWithoutIDs(incompleteURLs[i]);
     }
 
     res.send(completedURLsDict);

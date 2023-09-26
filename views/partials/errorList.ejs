@@ -1,5 +1,12 @@
 <% if (typeof linksDict !== "undefined") { %>
     <% if (Object.keys(linksDict).length > 0) { %>
+
+        <span>
+            <button id="previousButton">PREVIOUS</button>
+            <span id="pageNumber"><%= page %></span>
+            <button id="nextButton">NEXT</button>
+        </span>
+        
         <table id="linkTable">
             <tr>
                 <th>Weblink</th>
@@ -28,11 +35,7 @@
 
 
         <br>
-        <span>
-            <button id="previousButton">PREVIOUS</button>
-            <span id="pageNumber"><%= page %></span>
-            <button id="nextButton">NEXT</button>
-        </span>
+
 
 
         <script>
