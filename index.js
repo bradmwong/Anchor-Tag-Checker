@@ -14,7 +14,9 @@ app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 
 const { fetchLinks } = require("./models/fetchSiteMapLinks");
+const { fetchAnchorElementsWithoutIDs } = require("./models/fetchAnchorElementsWithoutIDs")
 const { assignErrors } = require("./models/assignErrors");
+
 
 app.get("/", (req, res) => {
     // Initialize Variables
@@ -33,11 +35,12 @@ app.post("/", async (req, res) => {
 
     linksDict = assignErrors(linksDict, page, quantity);
     // console.log(linksDict);
+    console.log(await fetchAnchorElementsWithoutIDs("https://bradmwong.github.io/test/broken%20anchor%20directs/"))
 
     res.render("home", { siteMapUrl, linksDict, page, quantity });
 });
 
-app.post("/nextPage", async (req, res) => {
+app.post("/changePage", async (req, res) => {
     const incompleteURLs = req.body.incompleteURLs;
     let completedURLsDict = {};
     console.log(incompleteURLs);
@@ -46,11 +49,6 @@ app.post("/nextPage", async (req, res) => {
     }
 
     res.send(completedURLsDict);
-});
-
-app.post("/previousPage", async (req, res) => {
-    const updatedText = `${req.body.incompleteURLs}`;
-    res.send(updatedText);
 });
 
 app.get("/test", function (req, res) {

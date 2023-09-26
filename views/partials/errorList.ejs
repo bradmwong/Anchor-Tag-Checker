@@ -47,6 +47,8 @@
                 pageSelector('previous');
             })
 
+
+            // Update the rows/data shown on each page
             async function pageSelector(pageSelection) {
 
                 const nextButton = document.querySelector('#nextButton');
@@ -129,7 +131,7 @@
                         const dataToSend = {
                             incompleteURLs: incompleteURLs,
                         };
-                        const response = await fetch('/nextPage', {
+                        const response = await fetch('/changePage', {
                             method: 'POST',
                             headers: {'Content-Type': 'application/json'},
                             body: JSON.stringify(dataToSend)
