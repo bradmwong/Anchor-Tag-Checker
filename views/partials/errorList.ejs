@@ -2,9 +2,12 @@
     <% if (Object.keys(linksDict).length > 0) { %>
 
         <span>
-            <button id="previousButton">PREVIOUS</button>
+
+            <button id="firstPageButton">FIRST</button>
+            <button id="previousPageButton">PREVIOUS</button>
             <span id="pageNumber"><%= page %></span>
-            <button id="nextButton">NEXT</button>
+            <button id="nextPageButton">NEXT</button>
+            <button id="lastPageButton">LAST</button>
         </span>
         
         <table id="linkTable">
@@ -40,13 +43,23 @@
 
         <script>
 
-            // NEXT BUTTON
-            nextButton.addEventListener('click', function() {
+            // FIRST PAGE BUTTON
+            firstPageButton.addEventListener('click', function() {
+                pageSelector('first');
+            });
+
+            // LAST PAGE BUTTON
+            lastPageButton.addEventListener('click', function() {
+                pageSelector('last');
+            });
+
+            // NEXT PAGE BUTTON
+            nextPageButton.addEventListener('click', function() {
                 pageSelector('next');
             });
 
-            // PREVIOUS BUTTON
-            previousButton.addEventListener('click', function () {
+            // PREVIOUS PAGE BUTTON
+            previousPageButton.addEventListener('click', function () {
                 pageSelector('previous');
             })
 
@@ -54,8 +67,8 @@
             // Update the rows/data shown on each page
             async function pageSelector(pageSelection) {
 
-                const nextButton = document.querySelector('#nextButton');
-                const previousButton = document.querySelector('#previousButton');
+                const nextPageButton = document.querySelector('#nextPageButton');
+                const previousPageButton = document.querySelector('#previousPageButton');
                 const pageField = document.querySelector('#pageNumber');
                 const rows = document.querySelectorAll('.row');
 
@@ -64,22 +77,27 @@
                 const lastPage = (rows.length % pageQuantity !== 0) ? (Math.floor(rows.length / pageQuantity) + 1) : (rows.length / pageQuantity);
                 const pageNumber = parseInt(pageField.innerText, 10);
 
-                // Check if first page
-                if (pageSelection === 'next') {
-                    if (pageNumber === lastPage) {
-                        return;
-                    }
-                } else if (pageSelection === 'previous') {
-                    if (pageNumber === firstPage) {
-                        return;
-                    }
-                } else {
-                    return;
-                }
-
                 let incompleteURLs = [];
                 let startIndex = 0;
                 let endIndex = 0;
+                let newPageNumber = 0;
+
+                // Reveal and populate next page
+                if (pageSelection === 'first') {
+                    newPageNumber = firstPage;
+                } else if (pageSelection === 'last') {
+                    newPageNumber = lastPage;
+                } else if (pageSelection === 'next') {
+                    newPageNumber =  pageNumber + 1;
+                } else if (pageSelection === 'previous') {
+                    newPageNumber = pageNumber - 1;
+                }
+
+                // Check if new page is valid
+                if (newPageNumber === pageNumber || newPageNumber < firstPage || newPageNumber > lastPage) {
+                    console.log('not a new page');
+                    return;
+                }
 
                 // Hide current page
                 startIndex = pageNumber * pageQuantity - pageQuantity;
@@ -91,22 +109,10 @@
                     }
                 }
 
-                // Reveal and populate next page
-                if (pageSelection === 'next') {
+                pageField.innerText = newPageNumber;
+                startIndex = newPageNumber * pageQuantity - pageQuantity;
+                endIndex = newPageNumber * pageQuantity - 1;
 
-                    const nextPageNumber =  pageNumber + 1;
-                    pageField.innerText = nextPageNumber;
-                    startIndex = nextPageNumber * pageQuantity - pageQuantity;
-                    endIndex = nextPageNumber * pageQuantity - 1;
-
-                } else if (pageSelection === 'previous') {
-
-                    const previousPageNumber = pageNumber - 1;
-                    pageField.innerText = previousPageNumber;
-                    startIndex = previousPageNumber * pageQuantity - pageQuantity;
-                    endIndex = previousPageNumber * pageQuantity - 1;
-
-                }
                 for (let i = startIndex; i <= endIndex; i++) {
                     if (typeof rows[i] !== "undefined") {
                         const rowURL = rows[i].querySelector('.row-url').innerText;

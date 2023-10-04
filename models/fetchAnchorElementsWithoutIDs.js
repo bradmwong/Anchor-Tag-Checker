@@ -37,7 +37,7 @@ module.exports.fetchAnchorElementsWithoutIDs = async (urlLink) => {
             }
 
             if (!anchorIDs.length) {
-                anchorIDs.push("No errors found.");
+                anchorIDs.push("-");
             }
 
             return anchorIDs;
