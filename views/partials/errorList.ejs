@@ -3,12 +3,28 @@
 
         <span>
 
-            <button id="firstPageButton">FIRST</button>
-            <button id="previousPageButton">PREVIOUS</button>
-            <input type="text" id="pageNumber" value="<%= page %>">
-            
-            <button id="nextPageButton">NEXT</button>
-            <button id="lastPageButton">LAST</button>
+            <button
+                id="firstPageButton"
+                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>  
+            >FIRST</button>
+            <button
+                id="previousPageButton"
+                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>  
+            >PREVIOUS</button>
+            <input
+                type="text"
+                id="pageNumber"
+                value="<%= page %>"
+                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %> 
+            >
+            <button
+                id="nextPageButton"
+                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %> 
+            >NEXT</button>
+            <button
+                id="lastPageButton"
+                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %> 
+            >LAST</button>
         </span>
         
         <table id="linkTable">
@@ -44,6 +60,8 @@
 
         <script>
 
+            
+
             let currentPageNumber = 1;
 
             const firstPageButton = document.querySelector('#firstPageButton');
@@ -51,7 +69,6 @@
             const nextPageButton = document.querySelector('#nextPageButton');
             const previousPageButton = document.querySelector('#previousPageButton');
             const pageNumberInput = document.querySelector('#pageNumber');
-            const outsideScope = "SCOPPPE"
 
             // FIRST PAGE BUTTON
             firstPageButton.addEventListener('click', function() {
@@ -142,6 +159,37 @@
                         rows[i].classList.remove('hidden');
                         rows[i].classList.add('visible');
                     }
+                }
+
+                // Disable unavailable buttons
+                // Single Page
+                console.log(rows.length);
+                console.log(pageQuantity);
+                if (rows.length <= pageQuantity) {
+                    firstPageButton.disabled = true;
+                    lastPageButton.disabled = true;
+                    nextPageButton.disabled = true;
+                    previousPageButton.disabled = true;
+                    pageNumberInput.disabled = true;
+                // New Page is First Page
+                } else if (newPageNumber <= firstPage) {
+                    firstPageButton.disabled = true;
+                    lastPageButton.disabled = false;
+                    previousPageButton.disabled = true;
+                    nextPageButton.disabled = false;
+                // New Page is Last Page
+                } else if (newPageNumber >= lastPage) {
+                    firstPageButton.disabled = false;
+                    lastPageButton.disabled = true;
+                    previousPageButton.disabled = false;
+                    nextPageButton.disabled = true;
+                // Page is somewhere in the middle
+                } else {
+                    firstPageButton.disabled = false;
+                    lastPageButton.disabled = false;
+                    nextPageButton.disabled = false;
+                    previousPageButton.disabled = false;
+                    pageNumberInput.disabled = false;
                 }
 
                 await sendPostRequestToUpdateErrorsColumn(incompleteURLs);
