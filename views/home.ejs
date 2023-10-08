@@ -1,4 +1,4 @@
-<% layout('layouts/homeTemplate') %>
+<% layout('layouts/main') %>
 
 
 <h1>HOME PAGE</h1>
@@ -12,3 +12,5 @@
 <% if (siteMapUrl) { %>
     <h1>Links for SiteMap URL: <%= siteMapUrl %></h1>
 <% }; %>
+
+<%- include('partials/errorList') %>

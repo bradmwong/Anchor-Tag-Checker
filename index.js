@@ -41,6 +41,7 @@ app.post("/", async (req, res) => {
     res.render("home", { siteMapUrl, linksDict, page, quantity });
 });
 
+
 app.post("/changePage", async (req, res) => {
     const incompleteURLs = req.body.incompleteURLs;
     let completedURLsDict = {};
@@ -51,8 +52,5 @@ app.post("/changePage", async (req, res) => {
     res.send(completedURLsDict);
 });
 
-app.get("/test", function (req, res) {
-    res.sendFile(__dirname + "/public/page.html");
-});
 
 app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
