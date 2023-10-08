@@ -1,9 +1,6 @@
-.visible {
-    background-color: #b5ffcc;
-}
-
-.hidden {
-    background-color: #ffa1aa;
+.hidden-row {
+    position: absolute;
+    left: -9999px;
 }
 
 #navbarSpacer {
@@ -30,11 +27,24 @@ table {
     border-collapse: collapse;
 }
 
-tr > th,
-tr > td {
-    padding: 8px;
-    border: 1px solid #ccc;
+table tr {
+    border-radius: 0;
 }
+
+table tr > td:first-child,
+table tr > th:first-child {
+    padding: 8px;
+    width: 60%;
+    /* border: 1px solid #000; */
+}
+
+table tr > td:not(:first-child),
+table tr > th:not(:first-child) {
+    padding: 8px;
+    width: 40%;
+    /* border: 1px solid #000; */
+}
+
 
 
 @media (max-width: 767px) {

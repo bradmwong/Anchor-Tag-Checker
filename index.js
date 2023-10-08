@@ -22,14 +22,14 @@ app.get("/", (req, res) => {
     // Initialize Variables
     const siteMapUrl = "";
     const links = {};
-    
+
     res.render("home", { activeTab: 'home', siteMapUrl, links });
 });
 
 app.post("/", async (req, res) => {
     const siteMapUrl = req.body.siteMapUrl;
     let linksDict = req.body.linksDict || (await fetchLinks(siteMapUrl)) || {};
-
+    
     let page = req.body.page || 1;
     let quantity = 5;
 
