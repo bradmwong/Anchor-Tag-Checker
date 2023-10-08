@@ -6,6 +6,52 @@
     background-color: #ffa1aa;
 }
 
-main {
-    margin-top: 40px; /* Update this if Navbar height changes */
+#navbarSpacer {
+    padding-top: 40px;
+    /* Update this if Navbar height changes */
+}
+
+
+
+
+#mainContainer {
+    margin-top: 50px;
+}
+
+/* ==================== DATA TABLE ==================== */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+tr > th,
+tr > td {
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+
+@media (max-width: 767px) {
+    #mainContainer {
+        margin-top: 10px;
+    }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 991px) {
+    #mainContainer {
+        margin-top: 20px;
+    }
+}
+
+@media (min-width: 992px) {
+    #mainContainer {
+        margin-top: 50px;
+    }
 }

@@ -1,3 +1,30 @@
+
+<h1>Input Sitemap Here</h1>
+<form id="form" action="/" method="POST">
+    <input id="siteMapUrl" type="text" name="siteMapUrl" required>
+    <input id="submitButton" type="submit" value="Submit">
+</form>
+<div id="loadingPlaceholder" class="ui hidden image">
+    <img class=" hidden image" src="\assets\loading-128px.gif" alt="Loading...">
+</div>
+
+<% if (siteMapUrl) { %>
+    <h1>Links for SiteMap URL: <%= siteMapUrl %></h1>
+<% }; %>
+
+<script>
+    const submitButton = document.querySelector('#submitButton');
+    submitButton.addEventListener('click', function(e) {
+        const loadingPlaceholder = document.querySelector('#loadingPlaceholder');
+        const siteMapUrl = document.querySelector('#siteMapUrl');
+        
+        if (siteMapUrl.value !== '') {
+            loadingPlaceholder.innerText = "LOADING...";
+        }
+    });
+</script>
+
+
 <% if (typeof linksDict !== "undefined") { %>
     <% if (Object.keys(linksDict).length > 0) { %>
 
@@ -5,54 +32,58 @@
 
             <button
                 id="firstPageButton"
-                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>  
+                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
             >FIRST</button>
             <button
                 id="previousPageButton"
-                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>  
+                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
             >PREVIOUS</button>
             <input
                 type="text"
                 id="pageNumber"
                 value="<%= page %>"
-                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %> 
+                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
             >
             <button
                 id="nextPageButton"
-                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %> 
+                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
             >NEXT</button>
             <button
                 id="lastPageButton"
-                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %> 
+                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
             >LAST</button>
         </span>
-        
-        <table id="linkTable">
-            <tr>
-                <th>Weblink</th>
-                <th>Errors</th>
-            </tr>
-            
-            <% let startingIndex = page * quantity - quantity;
-            let endingIndex = page * quantity - 1;
-            let keys = Object.keys(linksDict);
-            for (i = 0; i <= Object.keys(linksDict).length; i++) {
-                let key = keys[i];
-                if (linksDict.hasOwnProperty(key)) {
-                    if (linksDict[key] !== []) {
-                        if (i <= endingIndex) { %>
-                            <tr class="row visible">
-                        <% } else { %>
-                            <tr class="row hidden">
-                        <% } %>
-                            <th class="row-url"><%= key %></th>
-                            <th class="row-errors"><%= linksDict[key] %></th>
-                        </tr>
-                    <% }
-                }
-            } %>
-        </table>
-
+        <div class="table-container">
+            <table id="linkTable" class="ui unstackable table">
+                <thead>
+                    <tr>
+                        <th>Weblink</th>
+                        <th>Errors</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <% let startingIndex = page * quantity - quantity;
+                    let endingIndex = page * quantity - 1;
+                    let keys = Object.keys(linksDict);
+                    for (i = 0; i <= Object.keys(linksDict).length; i++) {
+                        let key = keys[i];
+                        if (linksDict.hasOwnProperty(key)) {
+                            if (linksDict[key] !== []) {
+                                if (i <= endingIndex) { %>
+                                    <tr class="row visible">
+                                <% } else { %>
+                                    <tr class="row hidden">
+                                <% } %>
+                                    <td class="row-url"><%= key %></th>
+                                    <td class="row-errors"><%= linksDict[key] %></th>
+                                </tr>
+                            <% }
+                        }
+                    } %>
+                </tbody>
+            </table>
+        </div>    
 
         <br>
 
