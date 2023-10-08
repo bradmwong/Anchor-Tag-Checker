@@ -5,3 +5,7 @@
 .hidden {
     background-color: #ffa1aa;
 }
+
+main {
+    margin-top: 40px; /* Update this if Navbar height changes */
+}

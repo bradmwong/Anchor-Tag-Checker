@@ -22,8 +22,8 @@ app.get("/", (req, res) => {
     // Initialize Variables
     const siteMapUrl = "";
     const links = {};
-
-    res.render("home", { siteMapUrl, links });
+    
+    res.render("home", { activeTab: 'home', siteMapUrl, links });
 });
 
 app.post("/", async (req, res) => {
@@ -34,11 +34,9 @@ app.post("/", async (req, res) => {
     let quantity = 5;
 
     linksDict = await assignErrors(linksDict, page, quantity);
-    // console.log(linksDict);
-    // console.log(await fetchAnchorElementsWithoutIDs("https://bradmwong.github.io/test/broken%20anchor%20directs/"))
     console.log(await fetchAnchorElementsWithoutIDs("https://developers.google.com/maps/documentation/javascript/reference/3.53/places-autocomplete-service/"))
 
-    res.render("home", { siteMapUrl, linksDict, page, quantity });
+    res.render("home", { activeTab: 'home', siteMapUrl, linksDict, page, quantity });
 });
 
 
@@ -52,5 +50,9 @@ app.post("/changePage", async (req, res) => {
     res.send(completedURLsDict);
 });
 
+
+app.get("/about", async (req, res) => {
+    res.render("about", {activeTab: 'about'});
+});
 
 app.listen(PORT, () => console.log(`server running on PORT ${PORT}`));
