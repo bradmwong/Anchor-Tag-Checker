@@ -22,27 +22,35 @@
     overflow-x: auto;
 }
 
-table {
+#linkTable {
     width: 100%;
     border-collapse: collapse;
 }
 
-table tr {
+#linkTable > tr {
     border-radius: 0;
 }
 
-table tr > td:first-child,
-table tr > th:first-child {
-    padding: 8px;
-    width: 60%;
-    /* border: 1px solid #000; */
+/* Override default Semantic UI class */
+#linkTable > thead > tr > th {
+    border-bottom: 0px;
 }
 
-table tr > td:not(:first-child),
-table tr > th:not(:first-child) {
+/* Override default Semantic UI class */
+#linkTable > tbody > tr:first-child > td {
+    border-top: 1px solid rgba(34,36,38,.1);
+}
+
+#linkTable tr > td:first-child,
+#linkTable tr > th:first-child {
+    /* padding: 8px; */
+    width: 60%;
+}
+
+#linkTable tr > td:not(:first-child),
+#linkTable tr > th:not(:first-child) {
     padding: 8px;
     width: 40%;
-    /* border: 1px solid #000; */
 }
 
 

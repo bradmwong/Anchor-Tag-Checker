@@ -62,28 +62,40 @@
         </div>
         <span>
 
-            <button
-                id="firstPageButton"
-                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
-            >FIRST</button>
-            <button
-                id="previousPageButton"
-                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
-            >PREVIOUS</button>
-            <input
-                type="text"
-                id="pageNumber"
-                value="<%= page %>"
-                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
-            >
-            <button
-                id="nextPageButton"
-                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
-            >NEXT</button>
-            <button
-                id="lastPageButton"
-                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
-            >LAST</button>
+            <div class="ui buttons">
+                <button
+                    id="firstPageButton"
+                    class="ui icon button"
+                    <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
+                >
+                    <i class="angle double left icon"></i>
+                </button>
+                <button
+                    id="previousPageButton"
+                    class="ui icon button"
+                    <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
+                >
+                    <i class="angle left icon"></i>
+                </button>
+                <button class="ui icon button">
+                    <i class="stop icon"></i>
+                </button>
+                <button
+                    id="nextPageButton"
+                    class="ui icon button"
+                    <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
+                >
+                    <i class="angle right icon"></i>
+                </button>
+                <button 
+                    id="lastPageButton"
+                    class="ui icon button"
+                    <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
+                >
+                    <i class="angle double right icon"></i>
+                </button>
+            </div>
+
         </span>
 
         <script>
