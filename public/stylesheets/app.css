@@ -20,11 +20,11 @@
 .table-container {
     width: 100%;
     overflow-x: auto;
+    margin-bottom: 10px;
 }
 
 #linkTable {
     width: 100%;
-    border-collapse: collapse;
 }
 
 #linkTable > tr {
@@ -43,16 +43,28 @@
 
 #linkTable tr > td:first-child,
 #linkTable tr > th:first-child {
-    /* padding: 8px; */
     width: 60%;
 }
 
 #linkTable tr > td:not(:first-child),
 #linkTable tr > th:not(:first-child) {
-    padding: 8px;
     width: 40%;
 }
 
+#linkTable tbody tr td {
+    height: 63px;
+    padding: 11px;
+}
+
+/* #linkTable tbody tr {
+    height: 63px;
+} */
+
+
+/* ==================== PAGE SELECTION ==================== */
+#pageNumberInput {
+    width: 70px;
+}
 
 
 @media (max-width: 767px) {

@@ -60,43 +60,51 @@
                 </tbody>
             </table>
         </div>
-        <span>
 
-            <div class="ui buttons">
-                <button
-                    id="firstPageButton"
-                    class="ui icon button"
-                    <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
-                >
-                    <i class="angle double left icon"></i>
-                </button>
-                <button
-                    id="previousPageButton"
-                    class="ui icon button"
-                    <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
-                >
-                    <i class="angle left icon"></i>
-                </button>
-                <button class="ui icon button">
-                    <i class="stop icon"></i>
-                </button>
-                <button
-                    id="nextPageButton"
-                    class="ui icon button"
+
+        <div class="ui buttons">
+            <button
+                id="firstPageButton"
+                class="ui icon button"
+                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
+            >
+                <i class="angle double left icon"></i>
+            </button>
+            <button
+                id="previousPageButton"
+                class="ui icon button"
+                <% if ((Object.keys(linksDict).length <= quantity) || (page === 1)) { %> disabled <% } %>
+            >
+                <i class="angle left icon"></i>
+            </button>
+
+            <div class="ui right labeled input button">
+                <input
+                    type="text"
+                    id="pageNumberInput"
+                    value="<%= page %>"
                     <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
                 >
-                    <i class="angle right icon"></i>
-                </button>
-                <button 
-                    id="lastPageButton"
-                    class="ui icon button"
-                    <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
-                >
-                    <i class="angle double right icon"></i>
-                </button>
+                <div class="ui basic label">
+                    of <%= (Object.keys(linksDict).length % quantity !== 0) ? (Math.floor(Object.keys(linksDict).length / quantity) + 1) : (Object.keys(linksDict).length / quantity);  %>
+                </div>
             </div>
+            <button
+                id="nextPageButton"
+                class="ui icon button"
+                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
+            >
+                <i class="angle right icon"></i>
+            </button>
+            <button 
+                id="lastPageButton"
+                class="ui icon button"
+                <% if (Object.keys(linksDict).length <= quantity) { %> disabled <% } %>
+            >
+                <i class="angle double right icon"></i>
+            </button>
+        </div>
 
-        </span>
 
         <script>
 
@@ -105,7 +113,7 @@
             const lastPageButton = document.querySelector('#lastPageButton');
             const nextPageButton = document.querySelector('#nextPageButton');
             const previousPageButton = document.querySelector('#previousPageButton');
-            const pageNumberInput = document.querySelector('#pageNumber');
+            const pageNumberInput = document.querySelector('#pageNumberInput');
             const rows = document.querySelectorAll('.row');
 
             let currentPageNumber = 1;
