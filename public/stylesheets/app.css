@@ -8,7 +8,12 @@
     /* Update this if Navbar height changes */
 }
 
+/* ==================== SITEMAP URL INPUT ==================== */
 
+#siteMapURLInput {
+    width: 100%;
+    max-width: 500px;
+}
 
 
 #mainContainer {

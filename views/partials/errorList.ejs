@@ -1,15 +1,20 @@
 
 <h1>Input Sitemap Here</h1>
-<form id="form" action="/" method="POST">
-    <input id="siteMapUrl" type="text" name="siteMapUrl" required>
-    <input id="submitButton" type="submit" value="Submit">
+
+<form action="/" method="POST">
+    <div id="siteMapURLInput" class="ui action input">
+        <input id="siteMapUrl" type="text" placeholder="e.g. https://developers.google.com/maps/sitemap.xml" name="siteMapUrl" required>
+        <button id="submitButton" type="submit" value="Submit" class="ui button">Review</button>
+    </div>
 </form>
+
 <div id="loadingPlaceholder" class="ui hidden image">
     <img class=" hidden image" src="\assets\loading-128px.gif" alt="Loading...">
 </div>
 
 <% if (siteMapUrl) { %>
-    <h1>Links for SiteMap URL: <%= siteMapUrl %></h1>
+    <h5>Links for SiteMap URL:</h5>
+    <p><%= siteMapUrl %></p>
 <% }; %>
 
 
